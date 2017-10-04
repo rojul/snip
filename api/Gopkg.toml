@@ -1,0 +1,22 @@
+[[constraint]]
+  name = "github.com/Sirupsen/logrus"
+  version = "1.0.3"
+
+[[constraint]]
+  name = "github.com/docker/docker"
+
+[[constraint]]
+  branch = "v2"
+  name = "github.com/go-yaml/yaml"
+
+[[constraint]]
+  name = "github.com/gorilla/handlers"
+  version = "1.2.1"
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.4.0"
+
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/mgo.v2"

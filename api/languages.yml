@@ -1,0 +1,8 @@
+languages:
+
+- id: ash
+  name: Ash
+  extension: sh
+  command: sh $FILE
+  helloWorld: |
+    echo Hello World
