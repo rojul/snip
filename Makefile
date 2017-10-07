@@ -19,7 +19,7 @@ pull:
 	${COMPOSE} pull
 
 runner-build:
-	cd api && docker build -f Dockerfile.runner -t snip-runner .
+	cd api && docker build -f Dockerfile.runner -t snip-runner-builder .
 
 image-build:
 	cd languages && ./build.sh
@@ -27,7 +27,4 @@ image-build:
 image-build-ash:
 	cd languages && ./build.sh ash
 
-web-cp:
-	rm -rf web/dist && cp -r ../snip-web/dist web/
-
-.PHONY: default build up logs down pull runner-build image-build image-build-ash web-cp
+.PHONY: default build up logs down pull runner-build image-build image-build-ash
