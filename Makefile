@@ -22,10 +22,10 @@ runner-build:
 	cd api && docker build -f Dockerfile.runner -t snip-runner .
 
 image-build:
-	cd images && ./build.sh
+	cd languages && ./build.sh
 
 image-build-ash:
-	cd images && ./build.sh ash
+	cd languages && ./build.sh ash
 
 web-cp:
 	rm -rf web/dist && cp -r ../snip-web/dist web/

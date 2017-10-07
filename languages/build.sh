@@ -8,7 +8,7 @@ RUN (addgroup -S snip && adduser -SDG snip snip) || adduser --system --group sni
     && chmod 777 /home/snip
 WORKDIR /home/snip
 
-COPY --from=snip-runner /runner /usr/local/bin/
+COPY --from=snip-runner-builder /runner /usr/local/bin/
 
 ENTRYPOINT []
 CMD [ "runner" ]

@@ -6,3 +6,237 @@ languages:
   command: sh $FILE
   helloWorld: |
     echo Hello World
+
+- id: assembly
+  name: Assembly
+  extension: asm
+  command: nasm -f elf64 -o a.o $FILE && ld -o a.out a.o && ./a.out
+  helloWorld: |
+    section .data
+      hello db 'Hello World', 0xa
+      len equ $ - hello
+
+    section .text
+      global _start
+
+    _start:
+      mov rax, 1 ; write(stdout, hello, len)
+      mov rdi, 1
+      mov rsi, hello
+      mov rdx, len
+      syscall
+
+      mov rax, 60 ; exit(0)
+      mov rdi, 0
+      syscall
+
+- id: bash
+  name: Bash
+  extension: sh
+  command: bash $FILE
+  helloWorld: |
+    echo Hello World
+
+- id: brainfuck
+  name: Brainfuck
+  extension: bf
+  command: brainfuck $FILE
+  helloWorld: |
+    -[------->+<]>-.
+    -[->+++++<]>++.
+    +++++++.
+    .
+    +++.
+    [--->+<]>-----.
+    ---[->+++<]>.
+    -[--->+<]>---.
+    +++.
+    ------.
+    --------.
+    >++++++++++.
+
+- id: c
+  name: C
+  extension: c
+  command: gcc $FILE && ./a.out
+  helloWorld: |
+    #include <stdio.h>
+
+    int main(void) {
+        printf("Hello World\n");
+        return 0;
+    }
+
+- id: cpp
+  name: C++
+  extension: cpp
+  command: g++ $FILE && ./a.out
+  helloWorld: |
+    #include <iostream>
+    using namespace std;
+
+    int main() {
+        cout << "Hello World" << endl;
+    }
+
+- id: csharp
+  name: C#
+  extension: cs
+  command: mcs -out:a.exe $FILE && mono a.exe
+  helloWorld: |
+    using System;
+
+    class MainClass {
+        static void Main() {
+            Console.WriteLine("Hello World");
+        }
+    }
+
+- id: erlang
+  name: Erlang
+  extension: erl
+  command: escript $FILE
+  helloWorld: |
+    #!/usr/local/bin/escript
+
+    main(_) ->
+        io:format("Hello World~n").
+
+- id: go
+  name: Go
+  extension: go
+  command: go run *.go
+  helloWorld: |
+    package main
+
+    import (
+      "fmt"
+    )
+
+    func main() {
+      fmt.Println("Hello World")
+    }
+
+- id: groovy
+  name: Groovy
+  extension: groovy
+  command: groovy $FILE
+  helloWorld: |
+    println "Hello World"
+
+- id: haskell
+  name: Haskell
+  extension: hs
+  command: runghc $FILE
+  helloWorld: |
+    main = putStrLn "Hello World"
+
+- id: java
+  name: Java
+  extension: java
+  command: javac $FILE && java ${FILE%.*}
+  helloWorld: |
+    class main {
+        public static void main(String[] args) {
+            System.out.println("Hello World");
+        }
+    }
+
+- id: javascript
+  name: JavaScript
+  extension: js
+  command: node $FILE
+  helloWorld: |
+    console.log('Hello World')
+
+- id: julia
+  name: Julia
+  extension: jl
+  command: julia $FILE
+  helloWorld: |
+    println("Hello World")
+
+- id: kotlin
+  name: Kotlin
+  extension: kt
+  command: kotlinc $FILE && kotlin $(bash -c 'A=${FILE%.*} && echo ${A^}Kt')
+  helloWorld: |
+    fun main(args : Array<String>) {
+        println("Hello World")
+    }
+
+- id: lua
+  name: Lua
+  extension: lua
+  command: lua $FILE
+  helloWorld: |
+    print("Hello World");
+
+- id: perl
+  name: Perl
+  extension: pl
+  command: perl $FILE
+  helloWorld: |
+    print "Hello World\n";
+
+- id: php
+  name: PHP
+  extension: php
+  command: php $FILE
+  helloWorld: |
+    <?php
+
+    echo "Hello World\n";
+
+- id: powershell
+  name: PowerShell
+  extension: ps1
+  command: powershell -File $FILE
+  helloWorld: |
+    echo 'Hello World'
+
+- id: python
+  name: Python
+  extension: py
+  command: python $FILE
+  helloWorld: |
+    print("Hello World")
+
+- id: r
+  name: R
+  extension: R
+  command: Rscript $FILE
+  helloWorld: |
+    hello <- "Hello World\n"
+    cat(hello)
+
+- id: ruby
+  name: Ruby
+  extension: rb
+  command: ruby $FILE
+  helloWorld: |
+    puts "Hello World"
+
+- id: rust
+  name: Rust
+  extension: rs
+  command: rustc -o a.out $FILE && ./a.out
+  helloWorld: |
+    fn main() {
+        println!("Hello World");
+    }
+
+- id: swift
+  name: Swift
+  extension: swift
+  command: swift $FILE
+  helloWorld: |
+    print("Hello World")
+
+- id: typescript
+  name: TypeScript
+  extension: ts
+  command: tsc $FILE && node ${FILE%.*}.js
+  helloWorld: |
+    const hello: string = "Hello World";
+    console.log(hello);

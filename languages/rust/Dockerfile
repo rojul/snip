@@ -1,0 +1,1 @@
+FROM scorpil/rust:stable
