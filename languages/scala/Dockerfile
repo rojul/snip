@@ -1,0 +1,1 @@
+FROM frolvlad/alpine-scala

@@ -67,6 +67,13 @@ languages:
         return 0;
     }
 
+- id: clojure
+  name: Clojure
+  extension: clj
+  command: java -cp /usr/share/java/leiningen-$LEIN_VERSION-standalone.jar clojure.main $FILE
+  helloWorld: |
+    (println "Hello World")
+
 - id: cpp
   name: C++
   extension: cpp
@@ -92,6 +99,25 @@ languages:
         }
     }
 
+- id: d
+  name: D
+  extension: d
+  command: dmd -ofa.out $FILE && ./a.out
+  helloWorld: |
+    import std.stdio;
+
+    void main()
+    {
+        writeln("Hello World");
+    }
+
+- id: elixir
+  name: Elixir
+  extension: ex
+  command: elixirc $FILE
+  helloWorld: |
+    IO.puts "Hello World"
+
 - id: erlang
   name: Erlang
   extension: erl
@@ -101,6 +127,13 @@ languages:
 
     main(_) ->
         io:format("Hello World~n").
+
+- id: fsharp
+  name: F#
+  extension: fs
+  command: fsharpc --nologo --out:a.exe $FILE && mono a.exe
+  helloWorld: |
+    printfn "Hello World"
 
 - id: go
   name: Go
@@ -172,6 +205,19 @@ languages:
   helloWorld: |
     print("Hello World");
 
+- id: objc
+  name: Objective-C
+  extension: m
+  command: gcc -l objc $FILE && ./a.out
+  helloWorld: |
+    #import <stdio.h>
+
+    int main(int argv, char* argc[])
+    {
+        printf("Hello World\n");
+        return 0;
+    }
+
 - id: perl
   name: Perl
   extension: pl
@@ -226,6 +272,15 @@ languages:
         println!("Hello World");
     }
 
+- id: scala
+  name: Scala
+  extension: scala
+  command: scalac $FILE && scala ${FILE%.*}
+  helloWorld: |
+    object main extends App {
+      println("Hello World")
+    }
+
 - id: swift
   name: Swift
   extension: swift
@@ -240,3 +295,14 @@ languages:
   helloWorld: |
     const hello: string = "Hello World";
     console.log(hello);
+
+- id: visualbasic
+  name: Visual Basic
+  extension: vb
+  command: o=$(vbnc -nologo -out:a.exe $FILE); c=$?; if [ $c != 0 ]; then printf "$o"; exit $c; fi; mono a.exe
+  helloWorld: |
+    Public Module main
+      Sub Main()
+        Console.WriteLine("Hello World")
+      End Sub
+    End Module
