@@ -1,5 +1,5 @@
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gfortran \
+    fp-compiler \
     && rm -rf /var/lib/apt/lists/*

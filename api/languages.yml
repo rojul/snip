@@ -74,6 +74,16 @@ languages:
   helloWorld: |
     (println "Hello World")
 
+- id: cobol
+  name: Cobol
+  extension: cob
+  command: cobc -xj $FILE
+  helloWorld: |2
+           identification division.
+           program-id. hello.
+           procedure division.
+               display 'Hello World'.
+
 - id: cpp
   name: C++
   extension: cpp
@@ -85,6 +95,13 @@ languages:
     int main() {
         cout << "Hello World" << endl;
     }
+
+- id: crystal
+  name: Crystal
+  extension: cr
+  command: crystal run $FILE
+  helloWorld: |
+    puts "Hello World"
 
 - id: csharp
   name: C#
@@ -127,6 +144,14 @@ languages:
 
     main(_) ->
         io:format("Hello World~n").
+
+- id: fortran
+  name: Fortran
+  extension: f90
+  command: gfortran $FILE && ./a.out
+  helloWorld: |
+    print'("Hello World")'
+    end
 
 - id: fsharp
   name: F#
@@ -217,6 +242,23 @@ languages:
         printf("Hello World\n");
         return 0;
     }
+
+- id: ocaml
+  name: OCaml
+  extension: ml
+  command: ocaml $FILE
+  helloWorld: |
+    print_string "Hello World\n";;
+
+- id: pascal
+  name: Pascal
+  extension: p
+  command: o=$(pc $FILE 2>&1); c=$?; if [ $c != 0 ]; then printf "$o"; exit $c; fi; ./${FILE%.*}
+  helloWorld: |
+    program Hello;
+    begin
+      writeln ('Hello World')
+    end.
 
 - id: perl
   name: Perl
