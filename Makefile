@@ -1,4 +1,5 @@
 COMPOSE := docker-compose -f docker-compose.yml -f docker-compose.dev.yml
+DOCKER_OPTS := -v /var/run/docker.sock:/var/run/docker.sock:ro
 
 default: build up
 	${COMPOSE} logs --tail 10 -f api
@@ -18,6 +19,10 @@ down:
 pull:
 	${COMPOSE} pull
 
+test:
+	cd api && docker build --target builder -t snip-test .
+	docker run --rm ${DOCKER_OPTS} snip-test go test -v -args -languages
+
 runner-build:
 	cd api && docker build -f Dockerfile.runner -t snip-runner-builder .
 
@@ -27,4 +32,4 @@ image-build:
 image-build-ash:
 	cd languages && ./build.sh ash
 
-.PHONY: default build up logs down pull runner-build image-build image-build-ash
+.PHONY: default build up logs down pull test runner-build image-build image-build-ash
