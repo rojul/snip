@@ -4,6 +4,11 @@
 
 [[constraint]]
   name = "github.com/docker/docker"
+  version = "1.13.1"
+
+[[constraint]]
+  name = "github.com/docker/go-units"
+  version = "0.3.2"
 
 [[constraint]]
   branch = "v2"
@@ -15,12 +20,12 @@
 
 [[constraint]]
   name = "github.com/gorilla/mux"
-  version = "1.4.0"
-
-[[constraint]]
-  branch = "v2"
-  name = "gopkg.in/mgo.v2"
+  version = "1.5.0"
 
 [[constraint]]
   name = "github.com/spf13/viper"
   version = "1.0.0"
+
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/mgo.v2"

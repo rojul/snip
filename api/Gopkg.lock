@@ -28,14 +28,14 @@
 [[projects]]
   name = "github.com/docker/go-connections"
   packages = ["nat","sockets","tlsconfig"]
-  revision = "990a1a1a70b0da4c4cb70e117971a4f0babfbf1a"
-  version = "v0.2.1"
+  revision = "3ede32e2033de7505e6500d6c868c2b9ed9f169d"
+  version = "v0.3.0"
 
 [[projects]]
   name = "github.com/docker/go-units"
   packages = ["."]
-  revision = "f2d77a61e3c169b43402a0a1e84f06daf29b8190"
-  version = "v0.3.1"
+  revision = "0dadbb0345b35ec7ef35e228dabb8de89a65bf52"
+  version = "v0.3.2"
 
 [[projects]]
   name = "github.com/fsnotify/fsnotify"
@@ -64,8 +64,8 @@
 [[projects]]
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "bcd8bc72b08df0f70df986b97f95590779502d31"
-  version = "v1.4.0"
+  revision = "24fca303ac6da784b9e8269f724ddeb0b2eea5e7"
+  version = "v1.5.0"
 
 [[projects]]
   branch = "master"
@@ -84,12 +84,6 @@
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
-
-[[projects]]
-  name = "github.com/opencontainers/runc"
-  packages = ["libcontainer/user"]
-  revision = "baf6536d6259209c3edfa2b22237af82942d3dfa"
-  version = "v0.1.1"
 
 [[projects]]
   name = "github.com/pelletier/go-toml"
@@ -137,19 +131,19 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "81e90905daefcd6fd217b62423c0908922eadb30"
+  revision = "541b9d50ad47e36efd8fb423e938e59ff1691f68"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","context/ctxhttp","proxy"]
-  revision = "66aacef3dd8a676686c7ae3716979581e8b03c47"
+  revision = "aabf50738bcdd9b207582cbe796b59ed65d56680"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix","windows"]
-  revision = "ab9e364efd8b52800ff7ee48a9ffba4e0ed78dfb"
+  revision = "8dbc5d05d6edcc104950cc299a1ce6641235bc86"
 
 [[projects]]
   branch = "master"
@@ -172,6 +166,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "851ce38f09fde5b7772f2176e600fcb0e965c41dc40ce47ed8bdabada7ed7aac"
+  inputs-digest = "59636e853f520a83382bba2382c17b08e04624dccdbf2b661b0c167a142f5019"
   solver-name = "gps-cdcl"
   solver-version = 1

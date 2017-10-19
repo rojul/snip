@@ -61,7 +61,7 @@ func defaultPayload(l *Language, content string) *Payload {
 		Language: l.ID,
 		Payload: runner.Payload{
 			Files: []*runner.File{
-				&runner.File{
+				{
 					Name:    "main." + l.Extension,
 					Content: content,
 				},
@@ -74,7 +74,7 @@ func resultFromMessage(message string) *runner.Result {
 	n := 0
 	return &runner.Result{
 		Events: []*runner.Event{
-			&runner.Event{
+			{
 				Message: message,
 				Type:    "stdout",
 			},
