@@ -7,7 +7,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/client"
-	units "github.com/docker/go-units"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	mgo "gopkg.in/mgo.v2"
@@ -64,7 +63,7 @@ func (h *handler) Serve() error {
 	timeout := 10 * time.Second
 	srv := &http.Server{
 		Handler:      h.getAPIHandler(),
-		Addr:         h.config.HTTPPort,
+		Addr:         h.config.HTTPAddr,
 		ReadTimeout:  timeout,
 		WriteTimeout: timeout + h.config.RunTimeout,
 	}
@@ -74,16 +73,8 @@ func (h *handler) Serve() error {
 func NewDefaultServer() (h *handler, err error) {
 	h = &handler{}
 
-	h.config = &Config{
-		RunTimeout:         15 * time.Second,
-		Memory:             512 * units.MiB,
-		SnippetSizeLimit:   1 * units.MiB,
-		MongoURL:           "mongo",
-		MongoDB:            "snip",
-		DefaultImagePrefix: "snip",
-		NanoCPUs:           1 * 1e9,
-		LanguagesFile:      "languages.yml",
-		ReturnSizeLimit:    100 * units.KiB,
+	if h.config, err = configFromEnv(); err != nil {
+		return nil, err
 	}
 
 	if h.config.JSONLogging {

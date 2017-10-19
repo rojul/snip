@@ -19,9 +19,14 @@ down:
 pull:
 	${COMPOSE} pull
 
-test:
-	cd api && docker build --target builder -t snip-test .
+test: test-build
 	docker run --rm ${DOCKER_OPTS} snip-test go test -v -args -languages
+
+test-short: test-build
+	docker run snip-test go test -v -short
+
+test-build:
+	cd api && docker build --target builder -t snip-test .
 
 runner-build:
 	cd api && docker build -f Dockerfile.runner -t snip-runner-builder .
@@ -32,4 +37,4 @@ image-build:
 image-build-ash:
 	cd languages && ./build.sh ash
 
-.PHONY: default build up logs down pull test runner-build image-build image-build-ash
+.PHONY: default build up logs down pull test test-short test-build runner-build image-build image-build-ash

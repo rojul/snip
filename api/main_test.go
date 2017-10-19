@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/docker/docker/client"
-	units "github.com/docker/go-units"
 )
 
 var testH *handler
 var testLanguages = flag.Bool("languages", false, "test all languages")
 
 func TestMain(m *testing.M) {
+	if testing.Short() {
+		return
+	}
+
 	var err error
 	testH, err = newTestHandler()
 	if err != nil {
@@ -28,14 +30,7 @@ func TestMain(m *testing.M) {
 func newTestHandler() (h *handler, err error) {
 	h = &handler{}
 
-	h.config = &Config{
-		RunTimeout:         30 * time.Second,
-		Memory:             512 * units.MiB,
-		SnippetSizeLimit:   1 * units.MiB,
-		DefaultImagePrefix: "snip",
-		LanguagesFile:      "languages.yml",
-		ReturnSizeLimit:    100 * units.KiB,
-	}
+	h.config = defaultConfig()
 
 	if h.languages, err = loadLanguagesYaml(h.config.LanguagesFile); err != nil {
 		return nil, err

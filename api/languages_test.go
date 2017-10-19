@@ -8,6 +8,10 @@ import (
 )
 
 func TestLanguagesHelloWorld(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping in short mode")
+	}
+
 	var ls []*Language
 	if *testLanguages != true {
 		t.Log("pass -languages to test all languages")

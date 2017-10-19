@@ -48,22 +48,6 @@ func (p *Payload) getValidationError() error {
 	return nil
 }
 
-type Config struct {
-	RunTimeout         time.Duration
-	Memory             int64
-	NanoCPUs           int64
-	NetworkEnabled     bool
-	MongoURL           string
-	MongoDB            string
-	JSONLogging        bool
-	SnippetSizeLimit   int64
-	ReturnSizeLimit    int64
-	CorsEnabled        bool
-	HTTPPort           string
-	DefaultImagePrefix string
-	LanguagesFile      string
-}
-
 type Snippet struct {
 	Payload  `bson:",inline"`
 	ID       bson.ObjectId `json:"id" bson:"_id"`

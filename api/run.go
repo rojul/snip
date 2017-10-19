@@ -89,8 +89,8 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 			Memory:     h.config.Memory,
 			MemorySwap: h.config.Memory,
 			NanoCPUs:   h.config.NanoCPUs,
-			CPUShares:  512,
-			PidsLimit:  35,
+			CPUShares:  h.config.CPUShares,
+			PidsLimit:  h.config.PidsLimit,
 		},
 		LogConfig: container.LogConfig{
 			Type: "none",
