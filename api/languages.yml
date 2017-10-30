@@ -84,6 +84,13 @@ languages:
            procedure division.
                display 'Hello World'.
 
+- id: commonlisp
+  name: Common Lisp
+  extension: lisp
+  command: ccl64 --load $FILE --eval '(quit)'
+  helloWorld: |
+    (format t "Hello World~%")
+
 - id: cpp
   name: C++
   extension: cpp
@@ -99,7 +106,7 @@ languages:
 - id: crystal
   name: Crystal
   extension: cr
-  command: crystal run $FILE
+  command: crystal run --no-color $FILE
   helloWorld: |
     puts "Hello World"
 
@@ -119,13 +126,22 @@ languages:
 - id: d
   name: D
   extension: d
-  command: dmd -ofa.out $FILE && ./a.out
+  command: dmd -run $FILE
   helloWorld: |
     import std.stdio;
 
     void main()
     {
         writeln("Hello World");
+    }
+
+- id: dart
+  name: Dart
+  extension: dart
+  command: dart $FILE
+  helloWorld: |
+    void main() {
+      print('Hello World');
     }
 
 - id: elixir
@@ -250,6 +266,13 @@ languages:
   helloWorld: |
     print_string "Hello World\n";;
 
+- id: octave
+  name: Octave
+  extension: m
+  command: octave -q $FILE
+  helloWorld: |
+    disp("Hello World")
+
 - id: pascal
   name: Pascal
   extension: p
@@ -275,6 +298,11 @@ languages:
     <?php
 
     echo "Hello World\n";
+
+- id: plaintext
+  name: Plain Text
+  extension: txt
+  notRunnable: true
 
 - id: powershell
   name: PowerShell
@@ -322,6 +350,13 @@ languages:
     object main extends App {
       println("Hello World")
     }
+
+- id: sqlite
+  name: SQLite
+  extension: sql
+  command: cat *.sql | sqlite3
+  helloWorld: |
+    select 'Hello World';
 
 - id: swift
   name: Swift
