@@ -60,6 +60,9 @@ func (h *handler) removeContainer(id string) {
 }
 
 func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Result, error) {
+	if language.NotRunnable {
+		return &runner.Result{Error: "This language is not runnable"}, nil
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), h.config.RunTimeout)
 	defer cancel()
 

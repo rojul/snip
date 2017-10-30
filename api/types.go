@@ -17,12 +17,13 @@ var (
 )
 
 type Language struct {
-	ID         string `json:"id" yaml:"id"`
-	Name       string `json:"name" yaml:"name"`
-	Extension  string `json:"extension" yaml:"extension"`
-	Command    string `json:"command,omitempty" yaml:"command"`
-	Image      string `json:"-" yaml:"image,omitempty"`
-	HelloWorld string `json:"helloWorld,omitempty" yaml:"helloWorld"`
+	ID          string `json:"id" yaml:"id"`
+	Name        string `json:"name" yaml:"name"`
+	Extension   string `json:"extension" yaml:"extension"`
+	Command     string `json:"command,omitempty" yaml:"command,omitempty"`
+	Image       string `json:"-" yaml:"image,omitempty"`
+	HelloWorld  string `json:"helloWorld,omitempty" yaml:"helloWorld,omitempty"`
+	NotRunnable bool   `json:"notRunnable,omitempty" yaml:"notRunnable,omitempty"`
 }
 
 type Payload struct {

@@ -26,6 +26,9 @@ func TestLanguagesHelloWorld(t *testing.T) {
 }
 
 func testLanguageHelloWorld(t *testing.T, l *Language) {
+	if l.NotRunnable {
+		t.Skip("not runnable")
+	}
 	p := defaultPayload(l, l.HelloWorld)
 	expected := resultFromMessage("Hello World\n")
 	actual, err := testH.runContainer(p, l)
