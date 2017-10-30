@@ -29,7 +29,7 @@ func (h *handler) homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	sendError(w, HTTPError{Status: http.StatusNotFound, Msg: "Resousnip Not Found"})
+	sendError(w, HTTPError{Status: http.StatusNotFound, Msg: "Resource Not Found"})
 }
 
 func addSubrouter(r *mux.Router, tpl string, f func(*mux.Router)) {
