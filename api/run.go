@@ -83,7 +83,7 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 		OpenStdin:       true,
 		StdinOnce:       true,
 		NetworkDisabled: !h.config.NetworkEnabled,
-		User:            "snip:snip",
+		User:            "1000:1000",
 	}
 	hostConfig := &container.HostConfig{
 		AutoRemove: true,
@@ -100,7 +100,7 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 		},
 		Tmpfs: map[string]string{
 			"/tmp":       "exec",
-			"/home/snip": "exec",
+			"/home/snip": "exec,uid=1000,gid=1000",
 		},
 		ReadonlyRootfs: true,
 	}

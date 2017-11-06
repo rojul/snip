@@ -4,8 +4,12 @@ set -e
 IMAGE_PREFIX='snip'
 TAG='latest'
 RUNNER_SNIPPET='
-RUN (addgroup -S snip && adduser -SDG snip snip) || adduser --system --group snip \
-    && chmod 777 /home/snip
+RUN deluser $(getent passwd 1000 | cut -d: -f1); \
+    rm -rf /home/*; \
+       ( addgroup -g 1000 snip \
+      && adduser -DG snip -u 1000 -s /bin/sh -g snip snip) \
+    || ( addgroup --gid 1000 snip \
+      && adduser --disabled-password --ingroup snip --uid 1000 --shell /bin/sh --gecos snip snip)
 WORKDIR /home/snip
 
 COPY --from=snip-runner-builder /runner /usr/local/bin/
