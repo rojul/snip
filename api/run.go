@@ -1,9 +1,13 @@
 package api
 
 import (
+	"bufio"
 	"bytes"
 	"context"
+	"encoding/binary"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -14,6 +18,10 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/gorilla/mux"
 	"github.com/rojul/snip/api/runner"
+)
+
+var (
+	errOutputTruncated = errors.New("output truncated")
 )
 
 func (h *handler) runRouter(r *mux.Router) {
@@ -144,23 +152,19 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 	res.Conn.Write(payloadBytes)
 	res.CloseWrite()
 
-	buf := new(bytes.Buffer)
-	if _, err := buf.ReadFrom(io.LimitReader(res.Reader, h.config.ReturnSizeLimit)); err != nil {
+	var buf bytes.Buffer
+	err = collectDockerStream(res.Reader, bufio.NewWriter(&buf), h.config.ReturnSizeLimit)
+	if err == errOutputTruncated {
+		return &runner.Result{Error: "Output too large"}, nil
+	}
+	if err != nil {
 		return nil, err
 	}
 	bufStr := buf.Bytes()
 
-	if len(bufStr) >= 8 {
-		// remove stream header
-		bufStr = bufStr[8:]
-	}
-
 	result := &runner.Result{}
 	err = json.Unmarshal(bufStr, result)
 	if err != nil {
-		if h.config.ReturnSizeLimit == int64(buf.Len()) {
-			return &runner.Result{Error: "Output too large"}, nil
-		}
 		if ctx.Err() == context.DeadlineExceeded {
 			return &runner.Result{Error: "Container timed out"}, nil
 		}
@@ -168,4 +172,38 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 	}
 
 	return result, nil
+}
+
+func collectDockerStream(stream io.Reader, output io.Writer, limit int64) error {
+	var n int64
+	header := make([]byte, 8)
+	for {
+		n += 8
+		if n > limit {
+			return errOutputTruncated
+		}
+		if _, err := io.ReadFull(stream, header); err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+
+		if header[0] != 1 && header[0] != 2 {
+			return fmt.Errorf("invalid STREAM_TYPE: %x", header[0])
+		}
+
+		frameSize := int64(binary.BigEndian.Uint32(header[4:]))
+		n += frameSize
+		if n > limit {
+			frameSize -= n - limit
+		}
+
+		if _, err := io.CopyN(output, stream, frameSize); err != nil {
+			return err
+		}
+		if n > limit {
+			return errOutputTruncated
+		}
+	}
 }
