@@ -10,7 +10,6 @@ import (
 
 func main() {
 	runtime.GOMAXPROCS(1)
-	defer runner.JSONRecover()
 
 	res := runner.Run(os.Stdin)
 	json.NewEncoder(os.Stdout).Encode(res)

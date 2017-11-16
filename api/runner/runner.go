@@ -3,25 +3,14 @@ package runner
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime/debug"
 	"strings"
 	"syscall"
 )
-
-func JSONRecover() {
-	if r := recover(); r != nil {
-		json.NewEncoder(os.Stdout).Encode(map[string]interface{}{
-			"error": fmt.Sprintf("panic in runner: %v\n\n%s", r, debug.Stack()),
-		})
-		os.Exit(1)
-	}
-}
 
 func Run(r io.Reader) *Result {
 	var payload Payload

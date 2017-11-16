@@ -153,7 +153,10 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 	res.CloseWrite()
 
 	var buf bytes.Buffer
-	err = collectDockerStream(res.Reader, bufio.NewWriter(&buf), h.config.ReturnSizeLimit)
+	stderr, err := collectDockerStream(res.Reader, bufio.NewWriter(&buf), h.config.ReturnSizeLimit)
+	if stderr != "" {
+		return &runner.Result{Error: "container returned an error:\n\n" + stderr}, nil
+	}
 	if err == errOutputTruncated {
 		return &runner.Result{Error: "Output too large"}, nil
 	}
@@ -174,23 +177,29 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 	return result, nil
 }
 
-func collectDockerStream(stream io.Reader, output io.Writer, limit int64) error {
+func collectDockerStream(stream io.Reader, output io.Writer, limit int64) (string, error) {
 	var n int64
+	var stderr bytes.Buffer
 	header := make([]byte, 8)
 	for {
 		n += 8
 		if n > limit {
-			return errOutputTruncated
+			return stderr.String(), errOutputTruncated
 		}
 		if _, err := io.ReadFull(stream, header); err != nil {
 			if err == io.EOF {
-				return nil
+				return stderr.String(), nil
 			}
-			return err
+			return "", err
 		}
 
-		if header[0] != 1 && header[0] != 2 {
-			return fmt.Errorf("invalid STREAM_TYPE: %x", header[0])
+		var w io.Writer
+		if header[0] == 1 {
+			w = output
+		} else if header[0] == 2 {
+			w = bufio.NewWriter(&stderr)
+		} else {
+			return "", fmt.Errorf("invalid STREAM_TYPE: %x", header[0])
 		}
 
 		frameSize := int64(binary.BigEndian.Uint32(header[4:]))
@@ -199,11 +208,11 @@ func collectDockerStream(stream io.Reader, output io.Writer, limit int64) error 
 			frameSize -= n - limit
 		}
 
-		if _, err := io.CopyN(output, stream, frameSize); err != nil {
-			return err
+		if _, err := io.CopyN(w, stream, frameSize); err != nil {
+			return "", err
 		}
 		if n > limit {
-			return errOutputTruncated
+			return stderr.String(), errOutputTruncated
 		}
 	}
 }
