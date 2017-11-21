@@ -45,7 +45,7 @@ func (h *handler) runHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := h.runContainer(&payload, language)
+	result, err := h.runContainerSync(&payload, language)
 	if err != nil {
 		sendError(w, err)
 		return
@@ -67,7 +67,8 @@ func (h *handler) removeContainer(id string) {
 	}
 }
 
-func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Result, error) {
+func (h *handler) runContainer(payload *Payload, language *Language, events chan<- *runner.Event) (*runner.Result, error) {
+	defer close(events)
 	if language.NotRunnable {
 		return &runner.Result{Error: "This language is not runnable"}, nil
 	}
@@ -152,34 +153,69 @@ func (h *handler) runContainer(payload *Payload, language *Language) (*runner.Re
 	res.Conn.Write(payloadBytes)
 	res.CloseWrite()
 
-	var buf bytes.Buffer
-	stderr, err := collectDockerStream(res.Reader, bufio.NewWriter(&buf), h.config.ReturnSizeLimit)
+	result := &runner.Result{}
+
+	done := make(chan bool)
+	lines := make(chan []byte)
+	go func() {
+		for l := range lines {
+			var e runner.Event
+			if err := json.Unmarshal(l, &e); err == nil && e.Type != "" {
+				events <- &e
+			} else if err := json.Unmarshal(l, result); err == nil && !result.IsEmpty() {
+			} else {
+				result = &runner.Result{Error: "Invalid response: " + string(l)}
+				break
+			}
+		}
+		done <- true
+	}()
+
+	stderr, err := collectDockerStream(res.Reader, h.config.ReturnSizeLimit, lines)
+	<-done
 	if stderr != "" {
-		return &runner.Result{Error: "container returned an error:\n\n" + stderr}, nil
+		if err == errOutputTruncated {
+			stderr += "\n[truncated]"
+		}
+		return &runner.Result{Error: "Container returned an error:\n\n" + stderr}, nil
 	}
 	if err == errOutputTruncated {
-		return &runner.Result{Error: "Output too large"}, nil
+		return &runner.Result{Error: "Output truncated"}, nil
 	}
 	if err != nil {
 		return nil, err
 	}
-	bufStr := buf.Bytes()
-
-	result := &runner.Result{}
-	err = json.Unmarshal(bufStr, result)
-	if err != nil {
-		if ctx.Err() == context.DeadlineExceeded {
-			return &runner.Result{Error: "Container timed out"}, nil
-		}
-		return &runner.Result{Error: "Invalid response from container"}, nil
+	if ctx.Err() == context.DeadlineExceeded {
+		return &runner.Result{Error: "Container timed out"}, nil
+	}
+	if result.IsEmpty() {
+		result = &runner.Result{Error: "No response from container"}
 	}
 
 	return result, nil
 }
 
-func collectDockerStream(stream io.Reader, output io.Writer, limit int64) (string, error) {
+func (h *handler) runContainerSync(payload *Payload, language *Language) (*runner.Result, error) {
+	events := make(chan *runner.Event)
+	done := make(chan bool)
+	var es []*runner.Event
+	go func() {
+		for e := range events {
+			es = append(es, e)
+		}
+		done <- true
+	}()
+	r, err := h.runContainer(payload, language, events)
+	<-done
+	r.Events = es
+	return r, err
+}
+
+func collectDockerStream(stream io.Reader, limit int64, lines chan<- []byte) (string, error) {
+	defer close(lines)
 	var n int64
 	var stderr bytes.Buffer
+	var buf bytes.Buffer
 	header := make([]byte, 8)
 	for {
 		n += 8
@@ -195,7 +231,7 @@ func collectDockerStream(stream io.Reader, output io.Writer, limit int64) (strin
 
 		var w io.Writer
 		if header[0] == 1 {
-			w = output
+			w = bufio.NewWriter(&buf)
 		} else if header[0] == 2 {
 			w = bufio.NewWriter(&stderr)
 		} else {
@@ -211,6 +247,15 @@ func collectDockerStream(stream io.Reader, output io.Writer, limit int64) (strin
 		if _, err := io.CopyN(w, stream, frameSize); err != nil {
 			return "", err
 		}
+
+		s := bufio.NewScanner(bufio.NewReader(&buf))
+		for s.Scan() {
+			lines <- s.Bytes()
+		}
+		if err := s.Err(); err != nil {
+			return "", err
+		}
+
 		if n > limit {
 			return stderr.String(), errOutputTruncated
 		}

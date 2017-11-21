@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
 	"runtime"
 
@@ -11,6 +10,5 @@ import (
 func main() {
 	runtime.GOMAXPROCS(1)
 
-	res := runner.Run(os.Stdin)
-	json.NewEncoder(os.Stdout).Encode(res)
+	runner.Run(os.Stdin, os.Stdout)
 }

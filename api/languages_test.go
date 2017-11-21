@@ -31,7 +31,7 @@ func testLanguageHelloWorld(t *testing.T, l *Language) {
 	}
 	p := defaultPayload(l, l.HelloWorld)
 	expected := resultFromMessage("Hello World\n")
-	actual, err := testH.runContainer(p, l)
+	actual, err := testH.runContainerSync(p, l)
 	if err != nil {
 		t.Fatal(err)
 	}

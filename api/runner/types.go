@@ -1,7 +1,7 @@
 package runner
 
 import (
-	"sync"
+	"io"
 	"time"
 )
 
@@ -28,6 +28,10 @@ func (res *Result) Append(e *Event) {
 	res.Events = append(res.Events, e)
 }
 
+func (res *Result) IsEmpty() bool {
+	return res.Error == "" && res.ExitCode == nil
+}
+
 type Payload struct {
 	Files   []*File `json:"files"`
 	Stdin   string  `json:"stdin,omitempty" bson:",omitempty"`
@@ -40,18 +44,14 @@ type File struct {
 }
 
 type eventWriter struct {
-	res *Result
-	t   EventType
-	mu  *sync.Mutex
+	w io.Writer
 }
 
-func (w *eventWriter) Write(p []byte) (n int, err error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-	w.res.Append(&Event{
-		Type:    w.t,
-		Message: string(p),
-		Time:    time.Now(),
+func (ew *eventWriter) Write(b []byte) (n int, err error) {
+	writeJSON(ew.w, &Event{
+		Type:    Stdout,
+		Message: string(b),
 	})
-	return len(p), nil
+
+	return len(b), nil
 }

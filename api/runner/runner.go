@@ -1,7 +1,6 @@
 package runner
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -12,17 +11,23 @@ import (
 	"syscall"
 )
 
-func Run(r io.Reader) *Result {
+func writeJSON(w io.Writer, v interface{}) {
+	json.NewEncoder(w).Encode(v)
+}
+
+func Run(r io.Reader, w io.Writer) {
 	var payload Payload
 	if err := json.NewDecoder(r).Decode(&payload); err != nil {
-		return &Result{Error: "Failed to parse input json: " + err.Error()}
+		writeJSON(w, &Result{Error: "Failed to parse input json: " + err.Error()})
+		return
 	}
 
 	if err := writeFiles(payload.Files); err != nil {
-		return &Result{Error: "Failed to write file to disk: " + err.Error()}
+		writeJSON(w, &Result{Error: "Failed to write file to disk: " + err.Error()})
+		return
 	}
 
-	return runCommand(&payload)
+	runCommand(w, &payload)
 }
 
 func writeFiles(files []*File) error {
@@ -58,33 +63,25 @@ func getExitCode(err error) *int {
 	return nil
 }
 
-func runCommand(payload *Payload) (res *Result) {
-	res = &Result{}
-
+func runCommand(w io.Writer, payload *Payload) {
 	cmd := exec.Command("sh", "-c", payload.Command)
 	cmd.Stdin = strings.NewReader(payload.Stdin)
 
-	var b bytes.Buffer
-	cmd.Stdout = &b
-	cmd.Stderr = &b
+	ew := &eventWriter{w}
+	cmd.Stdout = ew
+	cmd.Stderr = ew
 	cmd.Env = os.Environ()
 	if len(payload.Files) > 0 {
 		cmd.Env = append(cmd.Env, "FILE="+payload.Files[0].Name)
 	}
 	err := cmd.Run()
 
-	if b.Len() != 0 {
-		res.Append(&Event{
-			Type:    Stdout,
-			Message: b.String(),
-		})
-	}
-
+	res := &Result{}
 	res.ExitCode = getExitCode(err)
 
 	if res.ExitCode == nil || *res.ExitCode < 0 {
 		res.Error = err.Error()
 	}
 
-	return
+	writeJSON(w, res)
 }
