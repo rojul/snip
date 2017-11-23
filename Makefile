@@ -23,7 +23,7 @@ test: test-build
 	docker run --rm ${DOCKER_OPTS} snip-test go test -v -args -languages
 
 test-short: test-build
-	docker run snip-test go test -v -short
+	docker run --rm snip-test go test -v -short
 
 test-build:
 	cd api && docker build --target builder -t snip-test .
