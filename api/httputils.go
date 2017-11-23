@@ -43,7 +43,7 @@ func sendJSON(w http.ResponseWriter, v interface{}) {
 }
 
 func sendJSONWithStatus(w http.ResponseWriter, status int, v interface{}) {
-	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(v)
 }

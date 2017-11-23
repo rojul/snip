@@ -45,13 +45,7 @@ func (h *handler) runHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := h.runContainerSync(&payload, language)
-	if err != nil {
-		sendError(w, err)
-		return
-	}
-
-	sendJSON(w, result)
+	h.runContainerHTTPResponse(&payload, language, w)
 }
 
 func (h *handler) removeContainer(id string) {
@@ -209,6 +203,33 @@ func (h *handler) runContainerSync(payload *Payload, language *Language) (*runne
 	<-done
 	r.Events = es
 	return r, err
+}
+
+func (h *handler) runContainerHTTPResponse(payload *Payload, language *Language, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/x-ndjson; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	events := make(chan *runner.Event)
+	done := make(chan bool)
+	f, fOk := w.(http.Flusher)
+	if !fOk {
+		log.Debug("streaming unsupported")
+	}
+	go func() {
+		for e := range events {
+			json.NewEncoder(w).Encode(e)
+			if fOk {
+				f.Flush()
+			}
+		}
+		done <- true
+	}()
+	r, err := h.runContainer(payload, language, events)
+	<-done
+	if err != nil {
+		log.Error(err.Error())
+		r = &runner.Result{Error: http.StatusText(http.StatusInternalServerError)}
+	}
+	json.NewEncoder(w).Encode(r)
 }
 
 func collectDockerStream(stream io.Reader, limit int64, lines chan<- []byte) (string, error) {
