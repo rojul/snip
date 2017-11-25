@@ -1,0 +1,14 @@
+command = "go run *.go"
+
+[tests.helloWorld]
+_main = """
+package main
+
+import (
+  "fmt"
+)
+
+func main() {
+  fmt.Println("Hello World")
+}
+"""

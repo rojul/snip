@@ -1,0 +1,10 @@
+command = "javac $FILE && java ${FILE%.*}"
+
+[tests.helloWorld]
+_main = """
+class main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+"""

@@ -1,0 +1,7 @@
+extension = "hs"
+command = "runghc $FILE"
+
+[tests.helloWorld]
+_main = """
+main = putStrLn "Hello World"
+"""

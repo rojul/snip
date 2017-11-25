@@ -1,0 +1,7 @@
+extension = "jl"
+command = "julia $FILE"
+
+[tests.helloWorld]
+_main = """
+println("Hello World")
+"""

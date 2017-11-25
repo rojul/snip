@@ -1,0 +1,8 @@
+name = "F#"
+extension = "fs"
+command = "fsharpc --nologo --out:a.exe $FILE && mono a.exe"
+
+[tests.helloWorld]
+_main = """
+printfn "Hello World"
+"""

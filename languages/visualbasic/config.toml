@@ -1,0 +1,12 @@
+name = "Visual Basic"
+extension = "vb"
+command = "o=$(vbnc -nologo -out:a.exe $FILE); c=$?; if [ $c != 0 ]; then printf \"$o\"; exit $c; fi; mono a.exe"
+
+[tests.helloWorld]
+_main = """
+Public Module main
+  Sub Main()
+    Console.WriteLine("Hello World")
+  End Sub
+End Module
+"""

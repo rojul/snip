@@ -1,0 +1,8 @@
+command = "dart $FILE"
+
+[tests.helloWorld]
+_main = """
+void main() {
+  print('Hello World');
+}
+"""

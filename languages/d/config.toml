@@ -1,0 +1,11 @@
+command = "dmd -run $FILE"
+
+[tests.helloWorld]
+_main = """
+import std.stdio;
+
+void main()
+{
+    writeln("Hello World");
+}
+"""

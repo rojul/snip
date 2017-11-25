@@ -1,0 +1,6 @@
+command = "groovy $FILE"
+
+[tests.helloWorld]
+_main = """
+println "Hello World"
+"""

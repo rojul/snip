@@ -1,0 +1,8 @@
+name = "PowerShell"
+extension = "ps1"
+command = "powershell -File $FILE"
+
+[tests.helloWorld]
+_main = """
+echo 'Hello World'
+"""

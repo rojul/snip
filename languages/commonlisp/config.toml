@@ -1,0 +1,8 @@
+name = "Common Lisp"
+extension = "lisp"
+command = "ccl64 --load $FILE --eval '(quit)'"
+
+[tests.helloWorld]
+_main = """
+(format t "Hello World~%")
+"""

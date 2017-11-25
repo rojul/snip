@@ -1,0 +1,8 @@
+extension = "R"
+command = "Rscript $FILE"
+
+[tests.helloWorld]
+_main = """
+hello <- "Hello World\\n"
+cat(hello)
+"""

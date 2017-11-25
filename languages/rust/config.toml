@@ -1,0 +1,9 @@
+extension = "rs"
+command = "rustc -o a.out $FILE && ./a.out"
+
+[tests.helloWorld]
+_main = """
+fn main() {
+    println!("Hello World");
+}
+"""

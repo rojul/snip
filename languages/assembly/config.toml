@@ -1,0 +1,23 @@
+extension = "asm"
+command = "nasm -f elf64 -o a.o $FILE && ld -o a.out a.o && ./a.out"
+
+[tests.helloWorld]
+_main = """
+section .data
+  hello db 'Hello World', 0xa
+  len equ $ - hello
+
+section .text
+  global _start
+
+_start:
+  mov rax, 1 ; write(stdout, hello, len)
+  mov rdi, 1
+  mov rsi, hello
+  mov rdx, len
+  syscall
+
+  mov rax, 60 ; exit(0)
+  mov rdi, 0
+  syscall
+"""

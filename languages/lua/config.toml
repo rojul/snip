@@ -1,0 +1,6 @@
+command = "lua $FILE"
+
+[tests.helloWorld]
+_main = """
+print("Hello World");
+"""

@@ -1,0 +1,10 @@
+extension = "erl"
+command = "escript $FILE"
+
+[tests.helloWorld]
+_main = """
+#!/usr/local/bin/escript
+
+main(_) ->
+    io:format("Hello World~n").
+"""

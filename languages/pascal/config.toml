@@ -1,0 +1,10 @@
+extension = "p"
+command = "o=$(pc $FILE 2>&1); c=$?; if [ $c != 0 ]; then printf \"$o\"; exit $c; fi; ./${FILE%.*}"
+
+[tests.helloWorld]
+_main = """
+program Hello;
+begin
+  writeln ('Hello World')
+end.
+"""

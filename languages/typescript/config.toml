@@ -1,0 +1,9 @@
+name = "TypeScript"
+extension = "ts"
+command = "tsc $FILE && node ${FILE%.*}.js"
+
+[tests.helloWorld]
+_main = """
+const hello: string = "Hello World";
+console.log(hello);
+"""

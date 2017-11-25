@@ -1,0 +1,14 @@
+name = "Objective-C"
+extension = "m"
+command = "gcc -l objc $FILE && ./a.out"
+
+[tests.helloWorld]
+_main = """
+#import <stdio.h>
+
+int main(int argv, char* argc[])
+{
+    printf("Hello World\\n");
+    return 0;
+}
+"""

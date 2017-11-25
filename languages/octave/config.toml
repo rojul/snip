@@ -1,0 +1,7 @@
+extension = "m"
+command = "octave -q $FILE"
+
+[tests.helloWorld]
+_main = """
+disp("Hello World")
+"""

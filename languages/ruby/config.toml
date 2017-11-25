@@ -1,0 +1,7 @@
+extension = "rb"
+command = "ruby $FILE"
+
+[tests.helloWorld]
+_main = """
+puts "Hello World"
+"""

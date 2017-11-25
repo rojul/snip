@@ -1,0 +1,7 @@
+extension = "clj"
+command = "java -cp /usr/share/java/leiningen-$LEIN_VERSION-standalone.jar clojure.main $FILE"
+
+[tests.helloWorld]
+_main = """
+(println "Hello World")
+"""

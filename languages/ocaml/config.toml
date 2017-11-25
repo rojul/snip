@@ -1,0 +1,8 @@
+name = "OCaml"
+extension = "ml"
+command = "ocaml $FILE"
+
+[tests.helloWorld]
+_main = """
+print_string "Hello World\\n";;
+"""

@@ -1,0 +1,7 @@
+extension = "sh"
+command = "sh $FILE"
+
+[tests.helloWorld]
+_main = """
+echo Hello World
+"""

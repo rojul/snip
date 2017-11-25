@@ -1,0 +1,7 @@
+extension = "cr"
+command = "crystal run --no-color $FILE"
+
+[tests.helloWorld]
+_main = """
+puts "Hello World"
+"""

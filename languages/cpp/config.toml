@@ -1,0 +1,12 @@
+name = "C++"
+command = "g++ $FILE && ./a.out"
+
+[tests.helloWorld]
+_main = """
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello World" << endl;
+}
+"""

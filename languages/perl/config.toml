@@ -1,0 +1,7 @@
+extension = "pl"
+command = "perl $FILE"
+
+[tests.helloWorld]
+_main = """
+print "Hello World\\n";
+"""

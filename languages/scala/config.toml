@@ -1,0 +1,8 @@
+command = "scalac $FILE && scala ${FILE%.*}"
+
+[tests.helloWorld]
+_main = """
+object main extends App {
+  println("Hello World")
+}
+"""

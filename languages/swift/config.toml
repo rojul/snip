@@ -1,0 +1,6 @@
+command = "swift $FILE"
+
+[tests.helloWorld]
+_main = """
+print("Hello World")
+"""

@@ -1,0 +1,9 @@
+extension = "kt"
+command = "kotlinc $FILE && kotlin $(bash -c 'A=${FILE%.*} && echo ${A^}Kt')"
+
+[tests.helloWorld]
+_main = """
+fun main(args : Array<String>) {
+    println("Hello World")
+}
+"""

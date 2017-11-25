@@ -1,0 +1,9 @@
+name = "PHP"
+command = "php $FILE"
+
+[tests.helloWorld]
+_main = """
+<?php
+
+echo "Hello World\\n";
+"""

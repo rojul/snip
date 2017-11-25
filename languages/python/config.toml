@@ -1,0 +1,7 @@
+extension = "py"
+command = "python $FILE"
+
+[tests.helloWorld]
+_main = """
+print("Hello World")
+"""

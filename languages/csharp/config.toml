@@ -1,0 +1,14 @@
+name = "C#"
+extension = "cs"
+command = "mcs -out:a.exe $FILE && mono a.exe"
+
+[tests.helloWorld]
+_main = """
+using System;
+
+class MainClass {
+    static void Main() {
+        Console.WriteLine("Hello World");
+    }
+}
+"""

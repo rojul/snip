@@ -1,0 +1,8 @@
+extension = "f90"
+command = "gfortran $FILE && ./a.out"
+
+[tests.helloWorld]
+_main = """
+print'("Hello World")'
+end
+"""

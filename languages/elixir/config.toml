@@ -1,0 +1,7 @@
+extension = "ex"
+command = "elixirc $FILE"
+
+[tests.helloWorld]
+_main = """
+IO.puts "Hello World"
+"""

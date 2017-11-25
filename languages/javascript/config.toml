@@ -1,0 +1,8 @@
+name = "JavaScript"
+extension = "js"
+command = "node $FILE"
+
+[tests.helloWorld]
+_main = """
+console.log('Hello World')
+"""
