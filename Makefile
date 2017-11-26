@@ -28,6 +28,9 @@ test-short: test-build
 test-build:
 	cd api && docker build --target builder -t snip-test .
 
+tool: test-build
+	docker run --rm -v $$(pwd):/v snip-test sh -c 'go build -o /tool ./cmd/tool && cd /v && /tool'
+
 runner-build:
 	cd api && docker build -f Dockerfile.runner -t snip-runner-builder .
 

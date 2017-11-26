@@ -84,7 +84,7 @@ func NewDefaultServer() (h *handler, err error) {
 	}
 	log.Info("server starting")
 
-	if h.languages, err = loadLanguagesYaml(h.config.LanguagesFile); err != nil {
+	if h.languages, err = loadLanguagesJson(h.config.LanguagesFile); err != nil {
 		return nil, err
 	}
 

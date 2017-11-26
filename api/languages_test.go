@@ -29,7 +29,7 @@ func testLanguageHelloWorld(t *testing.T, l *Language) {
 	if l.NotRunnable {
 		t.Skip("not runnable")
 	}
-	p := defaultPayload(l, l.HelloWorld)
+	p := defaultPayload(l, l.getHelloWorld())
 	expected := resultFromMessage("Hello World\n")
 	actual, err := testH.runContainerSync(p, l)
 	if err != nil {

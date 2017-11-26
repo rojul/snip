@@ -17,14 +17,20 @@ var (
 )
 
 type Language struct {
-	ID          string `json:"id" yaml:"id"`
-	Name        string `json:"name" yaml:"name"`
-	Extension   string `json:"extension" yaml:"extension"`
-	Command     string `json:"command,omitempty" yaml:"command,omitempty"`
-	Image       string `json:"-" yaml:"image,omitempty"`
-	HelloWorld  string `json:"helloWorld,omitempty" yaml:"helloWorld,omitempty"`
-	NotRunnable bool   `json:"notRunnable,omitempty" yaml:"notRunnable,omitempty"`
+	ID          string                  `json:"id" toml:"id"`
+	Name        string                  `json:"name,omitempty" toml:"name"`
+	Extension   string                  `json:"extension,omitempty" toml:"extension"`
+	Command     string                  `json:"command,omitempty" toml:"command"`
+	Image       string                  `json:"image,omitempty" toml:"image"`
+	NotRunnable bool                    `json:"notRunnable,omitempty" toml:"notRunnable"`
+	Tests       map[string]LanguageTest `json:"tests,omitempty" toml:"tests"`
 }
+
+func (l *Language) getHelloWorld() string {
+	return l.Tests["helloWorld"]["_main"]
+}
+
+type LanguageTest map[string]string
 
 type Payload struct {
 	runner.Payload `bson:",inline"`

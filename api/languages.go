@@ -1,11 +1,12 @@
 package api
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"sort"
+	"strings"
 
-	"github.com/go-yaml/yaml"
 	"github.com/gorilla/mux"
 )
 
@@ -41,12 +42,25 @@ func (h *handler) languageListHandler(w http.ResponseWriter, r *http.Request) {
 func (h *handler) languageHandler(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	language, err := h.getLanguage(id)
+	l, err := h.getLanguage(id)
 	if err != nil {
 		sendError(w, err)
 		return
 	}
-	sendJSON(w, language)
+
+	sendJSON(w, &struct {
+		Language
+		HelloWorld string `json:"helloWorld,omitempty"`
+	}{
+		Language: Language{
+			ID:          l.ID,
+			Name:        l.Name,
+			Extension:   l.Extension,
+			Command:     l.Command,
+			NotRunnable: l.NotRunnable,
+		},
+		HelloWorld: l.getHelloWorld(),
+	})
 }
 
 func (h *handler) getLanguage(id string) (*Language, error) {
@@ -62,13 +76,13 @@ func (h *handler) GetLanguages() []*Language {
 	return h.languages
 }
 
-func loadLanguagesYaml(file string) ([]*Language, error) {
+func loadLanguagesJson(file string) ([]*Language, error) {
 	var obj languagesObj
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal(data, &obj)
+	err = json.Unmarshal(data, &obj)
 	if err != nil {
 		return nil, err
 	}
@@ -76,5 +90,13 @@ func loadLanguagesYaml(file string) ([]*Language, error) {
 	sort.Slice(languages, func(i, j int) bool {
 		return languages[i].ID < languages[j].ID
 	})
+	for _, l := range languages {
+		if l.Name == "" {
+			l.Name = strings.Title(l.ID)
+		}
+		if l.Extension == "" {
+			l.Extension = l.ID
+		}
+	}
 	return languages, nil
 }

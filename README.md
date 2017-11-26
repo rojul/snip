@@ -11,6 +11,8 @@ cd ..
 
 git clone https://github.com/rojul/snip.git
 cd snip
+# generate languages.json
+make tool
 # build and start the backend
 make
 

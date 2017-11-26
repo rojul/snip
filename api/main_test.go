@@ -32,7 +32,7 @@ func newTestHandler() (h *handler, err error) {
 
 	h.config = defaultConfig()
 
-	if h.languages, err = loadLanguagesYaml(h.config.LanguagesFile); err != nil {
+	if h.languages, err = loadLanguagesJson(h.config.LanguagesFile); err != nil {
 		return nil, err
 	}
 

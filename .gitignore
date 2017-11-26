@@ -1,3 +1,4 @@
 **/*.tmp
 web/dist
 api/*vendor*
+api/*.json

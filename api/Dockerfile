@@ -14,7 +14,7 @@ FROM alpine
 
 WORKDIR /root
 COPY --from=builder /api .
-COPY *.yml ./
+COPY *.json ./
 
 EXPOSE 80
 HEALTHCHECK CMD [ "wget", "--spider", "-q", "http://127.0.0.1" ]

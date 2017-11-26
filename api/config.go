@@ -36,7 +36,7 @@ func defaultConfig() *Config {
 		MongoURL:           "mongo",
 		MongoDB:            "snip",
 		DefaultImagePrefix: "snip",
-		LanguagesFile:      "languages.yml",
+		LanguagesFile:      "languages.json",
 		ReturnSizeLimit:    100 * units.KiB,
 	}
 }
