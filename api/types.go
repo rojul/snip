@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/rojul/snip/api/runner"
@@ -28,6 +30,34 @@ type Language struct {
 
 func (l *Language) getHelloWorld() string {
 	return l.Tests["helloWorld"]["_main"]
+}
+
+func (l *Language) getTestPayload(name string) runner.Payload {
+	t := l.Tests[name]
+	p := runner.Payload{
+		Stdin:   t["_stdin"],
+		Command: t["_command"],
+	}
+	if main, ok := t["_main"]; ok {
+		p.Files = append(p.Files, &runner.File{
+			Name:    "main." + l.Extension,
+			Content: main,
+		})
+	}
+	var keys []string
+	for k := range t {
+		if !strings.HasPrefix(k, "_") {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		p.Files = append(p.Files, &runner.File{
+			Name:    k,
+			Content: t[k],
+		})
+	}
+	return p
 }
 
 type LanguageTest map[string]string

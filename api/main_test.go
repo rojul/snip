@@ -10,7 +10,10 @@ import (
 )
 
 var testH *handler
-var testLanguages = flag.Bool("languages", false, "test all languages")
+var (
+	testLanguages = flag.Bool("languages", false, "test all languages")
+	verbose       = flag.Bool("verbose", false, "verbose logging")
+)
 
 func TestMain(m *testing.M) {
 	if testing.Short() {
