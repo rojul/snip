@@ -28,10 +28,6 @@ type Language struct {
 	Tests       map[string]LanguageTest `json:"tests,omitempty" toml:"tests"`
 }
 
-func (l *Language) getHelloWorld() string {
-	return l.Tests["helloWorld"]["_main"]
-}
-
 func (l *Language) getTestPayload(name string) runner.Payload {
 	t := l.Tests[name]
 	p := runner.Payload{

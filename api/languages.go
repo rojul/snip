@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/rojul/snip/api/runner"
+
 	"github.com/gorilla/mux"
 )
 
@@ -50,7 +52,7 @@ func (h *handler) languageHandler(w http.ResponseWriter, r *http.Request) {
 
 	sendJSON(w, &struct {
 		Language
-		HelloWorld string `json:"helloWorld,omitempty"`
+		HelloWorld runner.Payload `json:"helloWorld"`
 	}{
 		Language: Language{
 			ID:          l.ID,
@@ -59,7 +61,7 @@ func (h *handler) languageHandler(w http.ResponseWriter, r *http.Request) {
 			Command:     l.Command,
 			NotRunnable: l.NotRunnable,
 		},
-		HelloWorld: l.getHelloWorld(),
+		HelloWorld: l.getTestPayload("helloWorld"),
 	})
 }
 
@@ -96,6 +98,12 @@ func loadLanguagesJson(file string) ([]*Language, error) {
 		}
 		if l.Extension == "" {
 			l.Extension = l.ID
+		}
+		if _, ok := l.Tests["helloWorld"]; !ok {
+			if l.Tests == nil {
+				l.Tests = map[string]LanguageTest{}
+			}
+			l.Tests["helloWorld"] = LanguageTest{"_main": ""}
 		}
 	}
 	return languages, nil
