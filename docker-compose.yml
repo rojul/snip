@@ -10,7 +10,7 @@ services:
     read_only: true
 
   mongo:
-    image: mongo:3.4
+    image: mongo:3.6
     ports:
       - 127.0.0.1:27017:27017
     volumes:
