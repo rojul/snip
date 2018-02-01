@@ -1,0 +1,42 @@
+:80 {
+  status 200 /healthz
+
+  # log stdout
+  errors stdout
+
+  limits 3mb
+
+  gzip
+
+  header / {
+    Content-Security-Policy   "default-src 'self';"
+    Referrer-Policy           "strict-origin-when-cross-origin"
+	  # Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options    "nosniff"
+    X-Frame-Options           "DENY"
+    X-XSS-Protection          "1; mode=block"
+  }
+  header /static Cache-Control "max-age=86400"
+
+  rewrite /languages {
+	  r ^/[^/]+/?$
+	  to /
+  }
+  rewrite /snippets {
+	  r ^/[^/]+/?$
+	  to /
+  }
+  rewrite /about {
+	  r ^/?$
+	  to /
+  }
+
+  rewrite /api to /api/
+  proxy /api/ api:80 {
+    without /api/
+  }
+
+  errors {
+	  404 index.html
+  }
+}
